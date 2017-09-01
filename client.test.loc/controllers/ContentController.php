@@ -23,14 +23,14 @@ class ContentController extends Controller
         curl_setopt($ch,CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         curl_close($ch);
-        // т.к. получаем данные в формате json, то декадируем и и отправляем
+        // т.к. получаем данные в формате json, то декодируем и и отправляем
         return $obj_response = json_decode($response);
     }
     
     public function actionIndex () {
         //проверяем есть ли кэш и получаем данные из него
         $response_elements = Yii::$app->cache->get('response_elements');
-        if($response_elements) 
+        if(!empty($response_elements)) 
             $obj_response_elements = $response_elements;
         else{
             // если кэш пустой - вызываем нужный метод и записываем данные в кэш с временем хранения - 60с
@@ -39,12 +39,12 @@ class ContentController extends Controller
         }      
         // аналогично с получением одного элемента
         $response_element = Yii::$app->cache->get('response_element');
-        if($response_element) 
+        if(!empty($response_element)) 
             $obj_response_element = $response_element;
         else{
             // если кэш пустой - вызываем нужный метод и записываем данные в кэш с временем хранения - 60с
-            $obj_response_element = $this->getElements(1);
-            Yii::$app->cache->set('response_elements', $obj_response_element, 60);
+            $obj_response_element = $this->getElements(78);
+            Yii::$app->cache->set('response_element', $obj_response_element, 60);
         }
         // создаем модель формы
         $model = new NewElementForm();
